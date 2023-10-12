@@ -1,0 +1,63 @@
+Reading Data from the Web
+================
+
+Load the necessary libraries.
+
+``` r
+library(rvest)
+```
+
+    ## 
+    ## Attaching package: 'rvest'
+
+    ## The following object is masked from 'package:readr':
+    ## 
+    ##     guess_encoding
+
+``` r
+library(httr)
+```
+
+Import NSDUH data
+
+``` r
+nsduh_url = "https://samhda.s3-us-gov-west-1.amazonaws.com/s3fs-public/field-uploads/2k15StateFiles/NSDUHsaeShortTermCHG2015.htm"
+
+nsduh_html = 
+  read_html(nsduh_url)
+```
+
+``` r
+marj_use_df = 
+  nsduh_html |> 
+  html_table() |> 
+  first() |> 
+  slice(-1)
+```
+
+Import star wars !
+
+``` r
+sw_url = "https://www.imdb.com/list/ls070150896/"
+
+sw_html =
+  read_html(sw_url)
+```
+
+``` r
+sw_title_vec =
+  sw_html |> 
+  html_elements(".lister-item-header a") |> 
+  html_text()
+
+sw_gross_rev_vec =
+  sw_html |> 
+  html_elements(".text-small:nth-child(7) span:nth-child(5)") |> 
+  html_text()
+
+sw_df =
+  tibble(
+    title = sw_title_vec,
+    gross_rev = sw_gross_rev_vec
+  )
+```
